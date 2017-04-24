@@ -240,19 +240,16 @@ def colonWrite(data, colon):
     for item in data:
         worksheet.write(row, colon, item)
         row += 1
-    print("writes to spreadsheet")
 
 def simStart(tree):
     global DAY
     global TOTAL_DIST
     global COL
 
-    print("banan")
     DAY += 1
     data = [DAY]
 
     walked = generateRandomKm()
-    print("walked %d" % walked)
     TOTAL_DIST += walked
     data = data + [walked, TOTAL_DIST]
 
@@ -295,19 +292,18 @@ def simStart(tree):
 def main():
     global COL
     global DAY
+    global TOTAL_DIST
     for x in range (0, 10):
         tree = Tree()
         
         init(tree)
-        print("initialized")
         simStart(tree)
-        print("simulation finnished")
+        print("GAME OVER")
         COL += 1
         DAY = 0
         TOTAL_DIST = 0
+
         
     workbook.close()
     
 main()
-
-print("hello world")
