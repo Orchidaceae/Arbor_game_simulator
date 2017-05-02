@@ -83,7 +83,7 @@ class Tree(object):
     """docstring for ."""
     class Buffer(object):
         """docstring for ."""
-        
+
         def __init__(self, bufferMax):
             self.max = bufferMax
             self.value = bufferMax
@@ -108,7 +108,7 @@ class Tree(object):
                 self.value -= decrBy
             else:
                 self.value = 0
-                
+
     def __init__(self):
         self.treePhase = "SEED"
         self.waterBuffer = self.Buffer(SEED_WATERBUFFER_MAX)
@@ -194,7 +194,7 @@ def intake(tree, dist, weather):
         elif phase == "GROWN_TREE":
             x = GROWN_TREE_WATER_INTAKE
         amount = x * dist
-        tree.changeWaterBuffer(1, amount)        
+        tree.changeWaterBuffer(1, amount)
 
 def needs(tree):
     phase = tree.treePhase
@@ -209,8 +209,8 @@ def needs(tree):
         tree.changeSunBuffer(0, SPROUT_SUN_NEED)
     elif phase == "GROWN_TREE":
         tree.changeWaterBuffer(0, GROWN_TREE_WATER_NEED)
-        tree.changeSunBuffer(0, GROWN_TREE_SUN_NEED)   
-    
+        tree.changeSunBuffer(0, GROWN_TREE_SUN_NEED)
+
 def checkPhase(tree):
     phase = tree.treePhase
     global TOTAL_DIST
@@ -221,7 +221,7 @@ def checkPhase(tree):
         tree.changePhase()
     elif TOTAL_DIST >= 50 and phase != "GROWN_TREE":
         tree.changePhase()
-            
+
 def init(tree):
     global COL
     global TOTAL_DIST
@@ -233,7 +233,7 @@ def init(tree):
     data = [DAY, "-", TOTAL_DIST, "-", tree.getPhase(), tree.getWaterLevel(), tree.getSunLevel(), tree.getHealth()]
     colonWrite(data, COL)
     COL += 1
-    
+
 
 def colonWrite(data, colon):
     row = 0
@@ -249,10 +249,12 @@ def simStart(tree):
     DAY += 1
     data = [DAY]
 
+    #User does the walking (random generated)
     walked = generateRandomKm()
     TOTAL_DIST += walked
     data = data + [walked, TOTAL_DIST]
 
+    #Weather of the day is generated
     weather = generateRandomWeather()
     data = data + [weather]
 
@@ -260,23 +262,23 @@ def simStart(tree):
     checkPhase(tree)
     data = data + [tree.treePhase]
 
-    #Needs
+    #Needs of the day is drawn from the tree's buffers
     needs(tree)
 
-    #intake
+    #intake of the day is added to the tree´s buffers
     intake(tree, walked, weather)
 
     #if any buffer's level is at zero, the tree's health will take damage by 1hp
     if tree.waterBuffer.getValue() == 0:
         tree.changeHealthBuffer(0, 1)
-        
+
     if tree.sunBuffer.getValue() == 0:
         tree.changeHealthBuffer(0, 1)
 
     data = data + [tree.waterBuffer.getValue(), tree.sunBuffer.getValue(), tree.healthBuffer.getValue()]
 
     print(data)
-    
+
     colonWrite(data, COL)
     COL += 1
 
@@ -286,16 +288,15 @@ def simStart(tree):
     simStart(tree) ## continue loop simulation
 
 
-    
-    
-
 def main():
     global COL
     global DAY
     global TOTAL_DIST
+
+    #Does the simulation 10 times = simulates 10 different games
     for x in range (0, 10):
         tree = Tree()
-        
+
         init(tree)
         simStart(tree)
         print("GAME OVER")
@@ -303,7 +304,7 @@ def main():
         DAY = 0
         TOTAL_DIST = 0
 
-        
+
     workbook.close()
-    
+
 main()
